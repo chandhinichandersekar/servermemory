@@ -81,7 +81,7 @@ class Demo extends React.Component {
             tiles[secondGuess].show = false;
             this.setState({tiles});
             this.resetGuess();
-        }, 3000);
+        }, 1000);
     }
 
     resetGuess() {
@@ -166,9 +166,7 @@ class Demo extends React.Component {
 
         return (
             <div className="container">
-            <h1> SCORE: {this.state.clicks} </h1>
             <h1> {winText} </h1>
-            <button onClick={this.initGame.bind(this)}> New Game </button>
                 <div className="row">
                     {this.createRow({ start: 0, end: 4 })}
                 </div>
@@ -181,6 +179,8 @@ class Demo extends React.Component {
                 <div className="row">
                     {this.createRow({ start: 12, end: 16 })}
                 </div>
+                  <h1> SCORE: {this.state.clicks} </h1>
+                  <button onClick={this.initGame.bind(this)}> New Game </button>
             </div>
         );
     }
