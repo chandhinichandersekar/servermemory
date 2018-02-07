@@ -28,4 +28,3 @@ defmodule HangmanWeb.GamesChannel do
     true
   end
 end
-

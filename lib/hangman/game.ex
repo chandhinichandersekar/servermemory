@@ -38,6 +38,7 @@ defmodule Hangman.Game do
     |> MapSet.to_list
 
     Map.put(game, :guesses, gs)
+
   end
 
   def max_guesses do

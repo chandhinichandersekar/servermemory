@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Button } from 'reactstrap';
+import MemoryGame from './memory';
 
 export default function game_init(root, channel) {
   ReactDOM.render(<HangmanGame channel={channel} />, root);
@@ -39,6 +40,8 @@ class HangmanGame extends React.Component {
 
   render() {
     return (
+      <div>
+      <MemoryGame />
       <div className="row">
         <div className="col-6">
           <Word state={this.state} />
@@ -52,6 +55,7 @@ class HangmanGame extends React.Component {
         <div className="col-6">
           <GuessInput guess={this.sendGuess.bind(this)} />
         </div>
+      </div>
       </div>
     );
   }
