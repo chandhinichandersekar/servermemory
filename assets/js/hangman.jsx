@@ -22,7 +22,6 @@ class HangmanGame extends React.Component {
     super(props);
     this.channel = props.channel;
     this.state = { skel: "", goods: [], bads: [], max: 10 };
-
     this.channel.join()
         .receive("ok", this.gotView.bind(this))
         .receive("error", resp => { console.log("Unable to join", resp) });
@@ -31,6 +30,7 @@ class HangmanGame extends React.Component {
   gotView(view) {
     console.log("New view", view);
     this.setState(view.game);
+    this.setState({memory: view.memory})
   }
 
   sendGuess(ev) {
@@ -41,7 +41,7 @@ class HangmanGame extends React.Component {
   render() {
     return (
       <div>
-      <MemoryGame />
+      <MemoryGame initialState={this.state.memory} />
       <div className="row">
         <div className="col-6">
           <Word state={this.state} />

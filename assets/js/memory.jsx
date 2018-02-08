@@ -146,10 +146,9 @@ export default class Demo extends React.Component {
                 tiles[index].show = true;
                 this.setState({ tiles });
             }
-
         }
-
-
+        this.channel.push("memoryGameGuess", index);
+        this.setState(response);
     }
 
     render() {
@@ -160,6 +159,12 @@ export default class Demo extends React.Component {
 
         const winText = this.state.win ? "YOU WIN!!!" : "";
 
+        if (this.props.initialState) {
+          this.state.clicks = this.props.initialState.clicks;
+          this.state.firstGuess = this.props.initialState.firstGuess;
+          this.state.secondGuess =  this.props.initialState.secondGuess;
+          this.state.tiles = this.props.initialState.tiles;
+        }
         return (
             <div className="container">
             <h1> {winText} </h1>
