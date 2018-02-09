@@ -37,11 +37,15 @@ class HangmanGame extends React.Component {
     this.channel.push("guess", { letter: ev.key })
         .receive("ok", this.gotView.bind(this));
   }
-
   render() {
+    let MemoryGameComponent = null;
+    if (this.state.memory) {
+      MemoryGameComponent = <MemoryGame initialState={this.state.memory} channel={this.channel}/>;
+    }
     return (
       <div>
-      <MemoryGame initialState={this.state.memory} />
+
+      {MemoryGameComponent}
       <div className="row">
         <div className="col-6">
           <Word state={this.state} />

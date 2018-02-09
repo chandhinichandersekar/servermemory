@@ -3,59 +3,39 @@ import * as ReactDOM from 'react-dom';
 import { Button } from 'reactstrap';
 import shuffleArray from 'shuffle-array';
 
-class Tile extends React.Component {
-
-    onTileClick() {
-        this.props.onClick(this.props.index);
-    }
-
-    render() {
-        const nullOrMatched = this.props.matched ? <a>Matched</a> : null;
-        const letterElement = <a> {this.props.letter} </a>;
-        const letterText = this.props.show && !this.props.matched ? letterElement : "";
-        const flipColor = this.props.matched ? "green" : "blue";
-        var cardStyle = {
-            width: "6rem",
-            height: "6rem",
-            backgroundColor: flipColor
-        };
-
-        return (
-            <div className="col">
-                <div onClick={this.onTileClick.bind(this)} className="card text-white mb-3" style={cardStyle}>
-                    <center>
-                        <h1> {letterText} </h1>
-                        {nullOrMatched}
-                    </center>
-                </div>
-            </div>
-        );
-    }
-}
-
 export default class Demo extends React.Component {
 
     constructor(props) {
-        super(props);
-        this.state = this.getNewGameState();
+      super(props);
+      this.state = this.getNewGameState();
     }
 
     getNewGameState() {
-        let newGameTiles = [{ letter: "A" }, { letter: "B" }, { letter: "C" }, { letter: "D" }, { letter: "E" }, { letter: "F" }, { letter: "G" }, { letter: "H" },
-        { letter: "A" }, { letter: "B" }, { letter: "C" }, { letter: "D" }, { letter: "E" }, { letter: "F" }, { letter: "G" }, { letter: "H" }];
-        newGameTiles = shuffleArray(newGameTiles, { 'copy': true });
+      let firstGuess = null;
+      let secondGuess = null;
+      let clicks = 0;
+      let matched = 0;
+      let win = false;
+      let newGameTiles = [{ letter: "A" }, { letter: "B" }, { letter: "C" }, { letter: "D" }, { letter: "E" }, { letter: "F" }, { letter: "G" }, { letter: "H" },
+      { letter: "A" }, { letter: "B" }, { letter: "C" }, { letter: "D" }, { letter: "E" }, { letter: "F" }, { letter: "G" }, { letter: "H" }];
+      if (this.props.initialState) {
+        clicks = this.props.initialState.clicks;
+        firstGuess = this.props.initialState.firstGuess;
+        secondGuess =  this.props.initialState.secondGuess;
+        newGameTiles = this.props.initialState.tiles;
+      }
         newGameTiles = newGameTiles.map((tile, index) => {
             tile.onClick = this.guess.bind(this);
             tile.index = index;
             return tile;
         });
         const newGame = {
-            firstGuess: null,
-            secondGuess: null,
-            clicks: 0,
+            firstGuess,
+            secondGuess,
+            clicks,
             tiles: newGameTiles,
-            matched: 0,
-            win: false
+            matched,
+            win
         }
         return newGame;
     }
@@ -119,7 +99,11 @@ export default class Demo extends React.Component {
         tiles[this.state.secondGuess].matched = true;
         this.setState({tiles});
     }
+
     guess(index) {
+      if (this.channel) {
+
+      } else {
         let { tiles, clicks } = this.state;
         if (this.state.tiles[index].matched){
           return;
@@ -147,8 +131,7 @@ export default class Demo extends React.Component {
                 this.setState({ tiles });
             }
         }
-        this.channel.push("memoryGameGuess", index);
-        this.setState(response);
+      }
     }
 
     render() {
@@ -156,15 +139,8 @@ export default class Demo extends React.Component {
             width: "6rem",
             height: "6rem",
         };
-
         const winText = this.state.win ? "YOU WIN!!!" : "";
 
-        if (this.props.initialState) {
-          this.state.clicks = this.props.initialState.clicks;
-          this.state.firstGuess = this.props.initialState.firstGuess;
-          this.state.secondGuess =  this.props.initialState.secondGuess;
-          this.state.tiles = this.props.initialState.tiles;
-        }
         return (
             <div className="container">
             <h1> {winText} </h1>
@@ -182,6 +158,36 @@ export default class Demo extends React.Component {
                 </div>
                   <h1> SCORE: {this.state.clicks} </h1>
                   <button onClick={this.initGame.bind(this)}> New Game </button>
+            </div>
+        );
+    }
+}
+
+class Tile extends React.Component {
+
+    onTileClick() {
+        this.props.onClick(this.props.index);
+    }
+
+    render() {
+        const nullOrMatched = this.props.matched ? <a>Matched</a> : null;
+        const letterElement = <a> {this.props.letter} </a>;
+        const letterText = this.props.show && !this.props.matched ? letterElement : "";
+        const flipColor = this.props.matched ? "green" : "blue";
+        var cardStyle = {
+            width: "6rem",
+            height: "6rem",
+            backgroundColor: flipColor
+        };
+
+        return (
+            <div className="col">
+                <div onClick={this.onTileClick.bind(this)} className="card text-white mb-3" style={cardStyle}>
+                    <center>
+                        <h1> {letterText} </h1>
+                        {nullOrMatched}
+                    </center>
+                </div>
             </div>
         );
     }
