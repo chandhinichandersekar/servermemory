@@ -22,7 +22,7 @@ defmodule Memory.Game do
      createLetterObject("H")]
      #tiles = Enum.shuffle(tiles)
     %{
-      clicks: 5,
+      clicks: 0,
       firstGuess: nil,
       secondGuess: nil,
       tiles: tiles
@@ -41,7 +41,9 @@ defmodule Memory.Game do
     firstGuessHidden = setTileShow(currentState.tiles, currentState.firstGuess, false)
     secondGuessHidden = setTileShow(firstGuessHidden, currentState.secondGuess, false)
     Map.merge(currentState, %{
-      tiles: secondGuessHidden
+      tiles: secondGuessHidden,
+      firstGuess: nil,
+      secondGuess: nil
       })
   end
 
@@ -67,14 +69,22 @@ defmodule Memory.Game do
     List.replace_at(newTiles, currentState.secondGuess, secondGuessMatched)
   end
 
+  def getNewStateFromWin(state) do
+    if state.matched === 16 do
+      true
+    else
+      false
+    end
+  end
+
   def guess(currentState, index) do
     if currentState.firstGuess === nil do
-    newTiles = setTileShow(currentState.tiles, index, true)
-    Map.merge(currentState, %{
-        clicks: currentState.clicks + 1,
-        firstGuess: index,
-        tiles: newTiles
-      })
+      newTiles = setTileShow(currentState.tiles, index, true)
+      Map.merge(currentState, %{
+          clicks: currentState.clicks + 1,
+          firstGuess: index,
+          tiles: newTiles
+        })
     else
       if currentState.secondGuess === nil do
         newTiles = setTileShow(currentState.tiles, index, true)
@@ -85,10 +95,14 @@ defmodule Memory.Game do
           })
           if compareTiles(newState) do
             newTiles = matchTiles(newState)
-            Map.merge(newState, %{
+            newState = Map.merge(newState, %{
                 firstGuess: nil,
                 secondGuess: nil,
-                tiles: newTiles
+                tiles: newTiles,
+                matched: newState.matched + 2
+              })
+            Map.merge(newState, %{
+                win: getNewStateFromWin(newState)
               })
           else
             Map.merge(newState, %{

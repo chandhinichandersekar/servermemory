@@ -20,7 +20,7 @@ import "phoenix_html";
 
 import socket from "./socket";
 
-import game_init from "./hangman";
+import game_init from "./memoryChannel";
 
 function start() {
   let root = document.getElementById('root');

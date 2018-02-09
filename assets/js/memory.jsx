@@ -61,10 +61,18 @@ export default class Demo extends React.Component {
     }
 
     resetGuess() {
-        let {firstGuess, secondGuess} = this.state;
-        firstGuess = null;
-        secondGuess = null;
-        this.setState({ firstGuess, secondGuess });
+        if (this.props.channel) {
+          this.props.channel.push("resetGame")
+          .receive("ok", response => {
+            const newState = this.getNewGameState(response.newState)
+            this.setState(newState);
+          })
+        } else {
+          let {firstGuess, secondGuess} = this.state;
+          firstGuess = null;
+          secondGuess = null;
+          this.setState({ firstGuess, secondGuess });
+        }
     }
 
     createRow({ start, end }) {
