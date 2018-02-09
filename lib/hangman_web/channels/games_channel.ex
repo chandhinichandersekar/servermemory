@@ -32,6 +32,12 @@ defmodule HangmanWeb.GamesChannel do
     {:reply, {:ok, %{ "newState" => newState}}, socket}
   end
 
+  def handle_in("hideGuesses", %{}, socket) do
+    newState = GameMemory.hideGuesses(socket.assigns[:gameMemory])
+    socket = assign(socket, :gameMemory, newState)
+    {:reply, {:ok, %{ "newState" => newState}}, socket}
+  end
+
   # Add authorization logic here as required.
   defp authorized?(_payload) do
     true

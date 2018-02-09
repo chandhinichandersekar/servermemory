@@ -100,11 +100,24 @@ export default class Demo extends React.Component {
         this.setState({tiles});
     }
 
+    delayHide(hide) {
+      if (hide) {
+        setTimeout(() => {
+          this.props.channel.push("hideGuesses")
+          .receive("ok", response => {
+            const newState = this.getNewGameState(response.newState)
+            this.setState(newState);
+          })
+        }, 1000);
+      }
+    }
+
     guess(index) {
       if (this.props.channel) {
           this.props.channel.push("guessMemory", {index})
             .receive("ok", response => {
               const newState = this.getNewGameState(response.newState)
+              this.delayHide(response.newState.hide)
               this.setState(newState);
             });
       } else {
