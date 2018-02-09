@@ -2,15 +2,16 @@ defmodule HangmanWeb.GamesChannel do
   use HangmanWeb, :channel
 
   alias Hangman.Game
+  alias Memory.Game, as: GameMemory
 
   def join("games:" <> name, payload, socket) do
     if authorized?(payload) do
       game = Game.new()
-      //memory = %{"clicks" => 3, "firstGuess" => [], "secondGuess" => [], "tiles" => ["A", "B", "C", "D", "E", "F", "G", "H", "A", "B", "C", "D", "E", "F", "G", "H"]}
+      memory = GameMemory.new()
       socket = socket
       |> assign(:game, game)
       |> assign(:name, name)
-      {:ok, %{"join" => name, "game" => game}, socket}
+      {:ok, %{"join" => name, "game" => Game.client_view(game), "memory" => memory}, socket}
     else
       {:error, %{reason: "unauthorized"}}
     end
