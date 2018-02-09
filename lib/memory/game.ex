@@ -20,7 +20,7 @@ defmodule Memory.Game do
      createLetterObject("F"),
      createLetterObject("G"),
      createLetterObject("H")]
-     tiles = Enum.shuffle(tiles)
+     #tiles = Enum.shuffle(tiles)
     %{
       clicks: 5,
       firstGuess: nil,
@@ -45,6 +45,12 @@ defmodule Memory.Game do
       })
   end
 
+  def compareTiles(currentState) do
+    firstGuess = Enum.at(currentState.tiles, currentState.firstGuess)
+    secondGuess = Enum.at(currentState.tiles, currentState.secondGuess)
+    firstGuess.letter === secondGuess.letter
+  end
+
   def guess(currentState, index) do
     if currentState.firstGuess === nil do
     newTiles = setTileShow(currentState.tiles, index, true)
@@ -55,13 +61,22 @@ defmodule Memory.Game do
       })
     else
       if currentState.secondGuess === nil do
-      newTiles = setTileShow(currentState.tiles, index, true)
-      Map.merge(currentState, %{
-          clicks: currentState.clicks + 1,
-          secondGuess: index,
-          tiles: newTiles,
-          hide: true
-        })
+        newTiles = setTileShow(currentState.tiles, index, true)
+        newState = Map.merge(currentState, %{
+            clicks: currentState.clicks + 1,
+            secondGuess: index,
+            tiles: newTiles,
+          })
+          if compareTiles(newState) do
+            Map.merge(newState, %{
+                firstGuess: nil,
+                secondGuess: nil
+              })
+          else
+            Map.merge(newState, %{
+              hide: true
+              })
+          end
       else
         currentState
     end
