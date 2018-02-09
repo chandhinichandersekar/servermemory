@@ -1,5 +1,9 @@
 defmodule Memory.Game do
   def new do
+    getDefaultState
+  end
+
+  def getDefaultState do
     tiles = [createLetterObject("A"),
      createLetterObject("B"),
      createLetterObject("C"),
@@ -23,6 +27,12 @@ defmodule Memory.Game do
       secondGuess: nil,
       tiles: tiles
     }
+  end
+
+  def guess(currentState, index) do
+    Map.merge(currentState, %{
+        clicks: currentState.clicks + 1
+      })
   end
 
   def createLetterObject(letter) do

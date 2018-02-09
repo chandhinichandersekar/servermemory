@@ -11,6 +11,7 @@ defmodule HangmanWeb.GamesChannel do
       socket = socket
       |> assign(:game, game)
       |> assign(:name, name)
+      |> assign(:gameMemory, memory)
       {:ok, %{"join" => name, "game" => Game.client_view(game), "memory" => memory}, socket}
     else
       {:error, %{reason: "unauthorized"}}
@@ -23,6 +24,12 @@ defmodule HangmanWeb.GamesChannel do
     game = Game.guess(socket.assigns[:game], ll)
     socket = assign(socket, :game, game)
     {:reply, {:ok, %{ "game" => Game.client_view(game)}}, socket}
+  end
+
+  def handle_in("guessMemory", %{"index" => index}, socket) do
+    newState = GameMemory.guess(socket.assigns[:gameMemory], index)
+    socket = assign(socket, :gameMemory, newState)
+    {:reply, {:ok, %{ "newState" => newState}}, socket}
   end
 
   # Add authorization logic here as required.

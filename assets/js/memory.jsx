@@ -7,10 +7,10 @@ export default class Demo extends React.Component {
 
     constructor(props) {
       super(props);
-      this.state = this.getNewGameState();
+      this.state = this.getNewGameState(this.props.initialState);
     }
 
-    getNewGameState() {
+    getNewGameState(newState) {
       let firstGuess = null;
       let secondGuess = null;
       let clicks = 0;
@@ -18,11 +18,11 @@ export default class Demo extends React.Component {
       let win = false;
       let newGameTiles = [{ letter: "A" }, { letter: "B" }, { letter: "C" }, { letter: "D" }, { letter: "E" }, { letter: "F" }, { letter: "G" }, { letter: "H" },
       { letter: "A" }, { letter: "B" }, { letter: "C" }, { letter: "D" }, { letter: "E" }, { letter: "F" }, { letter: "G" }, { letter: "H" }];
-      if (this.props.initialState) {
-        clicks = this.props.initialState.clicks;
-        firstGuess = this.props.initialState.firstGuess;
-        secondGuess =  this.props.initialState.secondGuess;
-        newGameTiles = this.props.initialState.tiles;
+      if (newState) {
+        clicks = newState.clicks;
+        firstGuess = newState.firstGuess;
+        secondGuess =  newState.secondGuess;
+        newGameTiles = newState.tiles;
       }
         newGameTiles = newGameTiles.map((tile, index) => {
             tile.onClick = this.guess.bind(this);
@@ -101,8 +101,12 @@ export default class Demo extends React.Component {
     }
 
     guess(index) {
-      if (this.channel) {
-
+      if (this.props.channel) {
+          this.props.channel.push("guessMemory", {index})
+            .receive("ok", response => {
+              const newState = this.getNewGameState(response.newState)
+              this.setState(newState);
+            });
       } else {
         let { tiles, clicks } = this.state;
         if (this.state.tiles[index].matched){
