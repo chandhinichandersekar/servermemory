@@ -51,6 +51,22 @@ defmodule Memory.Game do
     firstGuess.letter === secondGuess.letter
   end
 
+  def getTilesMatched(tiles, index) do
+    IO.inspect index
+    newTile = Enum.at(tiles, index)
+    Map.merge(newTile, %{
+        matched: true
+      })
+  end
+
+  def matchTiles(currentState) do
+    newTiles = currentState.tiles
+    firstGuessMatched = getTilesMatched(newTiles, currentState.firstGuess)
+    newTiles = List.replace_at(newTiles, currentState.firstGuess, firstGuessMatched)
+    secondGuessMatched = getTilesMatched(newTiles, currentState.secondGuess)
+    List.replace_at(newTiles, currentState.secondGuess, secondGuessMatched)
+  end
+
   def guess(currentState, index) do
     if currentState.firstGuess === nil do
     newTiles = setTileShow(currentState.tiles, index, true)
@@ -68,9 +84,11 @@ defmodule Memory.Game do
             tiles: newTiles,
           })
           if compareTiles(newState) do
+            newTiles = matchTiles(newState)
             Map.merge(newState, %{
                 firstGuess: nil,
-                secondGuess: nil
+                secondGuess: nil,
+                tiles: newTiles
               })
           else
             Map.merge(newState, %{
