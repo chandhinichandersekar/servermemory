@@ -20,7 +20,7 @@ defmodule Memory.Game do
      createLetterObject("F"),
      createLetterObject("G"),
      createLetterObject("H")]
-     #tiles = Enum.shuffle(tiles)
+     tiles = Enum.shuffle(tiles)
     %{
       clicks: 0,
       firstGuess: nil,
@@ -55,7 +55,6 @@ defmodule Memory.Game do
   end
 
   def getTilesMatched(tiles, index) do
-    IO.inspect index
     newTile = Enum.at(tiles, index)
     Map.merge(newTile, %{
         matched: true
@@ -104,11 +103,9 @@ defmodule Memory.Game do
                 tiles: newTiles,
                 matched: newState.matched + 2
               })
-            IO.inspect newState
           winState =  Map.merge(newState, %{
                 win: getNewStateFromWin(newState)
               })
-              IO.inspect winState
               winState
           else
             Map.merge(newState, %{
