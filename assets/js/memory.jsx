@@ -41,7 +41,16 @@ export default class Demo extends React.Component {
     }
 
     initGame() {
-        this.setState(this.getNewGameState());
+      if (this.props.channel){
+        this.props.channel.push("resetGame")
+        .receive("ok", response => {
+          const newState = this.getNewGameState(response.newState)
+          this.setState(newState);
+        });
+      }
+      else {
+          this.setState(this.getNewGameState());
+        }
     }
 
     compareTiles() {

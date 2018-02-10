@@ -76,6 +76,7 @@ defmodule Memory.Game do
     #  false
     #end
   #end
+  
 
   def guess(currentState, index) do
     if currentState.firstGuess === nil do
