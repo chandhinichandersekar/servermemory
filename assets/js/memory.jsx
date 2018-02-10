@@ -120,7 +120,7 @@ export default class Demo extends React.Component {
             const newState = this.getNewGameState(response.newState)
             this.setState(newState);
           })
-        }, 3000);
+        }, 1000);
       }
     }
 

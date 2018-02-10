@@ -83,7 +83,8 @@ defmodule Memory.Game do
       Map.merge(currentState, %{
           clicks: currentState.clicks + 1,
           firstGuess: index,
-          tiles: newTiles
+          tiles: newTiles,
+          hide: false
         })
     else
       if currentState.secondGuess === nil do
@@ -95,19 +96,21 @@ defmodule Memory.Game do
           })
           if compareTiles(newState) do
             newTiles = matchTiles(newState)
-            Map.merge(newState, %{
+            newState = Map.merge(newState, %{
                 firstGuess: nil,
                 secondGuess: nil,
                 tiles: newTiles,
                 #matched: newState.matched + 2
               })
+            IO.inspect newState
+            newState
             #Map.merge(newState, %{
                 #win: getNewStateFromWin(newState)
               #})
           else
             Map.merge(newState, %{
               hide: true
-              })
+            })
           end
       else
         currentState
