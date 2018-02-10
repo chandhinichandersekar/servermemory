@@ -23,6 +23,8 @@ export default class Demo extends React.Component {
         firstGuess = newState.firstGuess;
         secondGuess =  newState.secondGuess;
         newGameTiles = newState.tiles;
+        matched = newState.matched;
+        win = newState.win;
       }
         newGameTiles = newGameTiles.map((tile, index) => {
             tile.onClick = this.guess.bind(this);

@@ -25,7 +25,8 @@ defmodule Memory.Game do
       clicks: 0,
       firstGuess: nil,
       secondGuess: nil,
-      tiles: tiles
+      tiles: tiles,
+      matched: 0
     }
   end
 
@@ -69,14 +70,14 @@ defmodule Memory.Game do
     List.replace_at(newTiles, currentState.secondGuess, secondGuessMatched)
   end
 
-  #def getNewStateFromWin(state) do
-    #if state.matched === 16 do
-    #  true
-    #else
-    #  false
-    #end
-  #end
-  
+  def getNewStateFromWin(state) do
+    if state.matched === 16 do
+      true
+    else
+      false
+    end
+  end
+
 
   def guess(currentState, index) do
     if currentState.firstGuess === nil do
@@ -101,13 +102,14 @@ defmodule Memory.Game do
                 firstGuess: nil,
                 secondGuess: nil,
                 tiles: newTiles,
-                #matched: newState.matched + 2
+                matched: newState.matched + 2
               })
             IO.inspect newState
-            newState
-            #Map.merge(newState, %{
-                #win: getNewStateFromWin(newState)
-              #})
+          winState =  Map.merge(newState, %{
+                win: getNewStateFromWin(newState)
+              })
+              IO.inspect winState
+              winState
           else
             Map.merge(newState, %{
               hide: true
