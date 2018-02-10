@@ -1,5 +1,6 @@
 # App artifacts
 /_build
+/assets/build
 /db
 /deps
 /*.ez
