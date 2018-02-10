@@ -1,8 +1,14 @@
-<h1>Memory Game</h1>
-
-<div id="game">
-  Loading...
+<div class="row">
+  <div class="col">
+    <h1 id="index-page">Join a Game</h1>
+    <center><form id="form" name="form" method="post" action="">
+      <label for="name">Enter your name to join the game: </label>
+    <input type="text" name="name" id="name" />
+    <input type="button" name="submit" id="submit" value="join"></center>
+    <script>
+      document.getElementById('submit').onclick = function() {
+      location.href = '/game/' + document.getElementById('name').value;
+      };
+</script>
+  </div>
 </div>
-
-
-
