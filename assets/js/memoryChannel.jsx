@@ -18,9 +18,11 @@ class MemoryChannel extends React.Component {
 
   gotView(view) {
     this.setState({memory: view.memory})
+    console.log("got view", this.state);
   }
 
   render() {
+    console.log("render", this.state);
     let MemoryGameComponent = null;
     if (this.state.memory) {
       MemoryGameComponent = <MemoryGame initialState={this.state.memory} channel={this.props.channel}/>;

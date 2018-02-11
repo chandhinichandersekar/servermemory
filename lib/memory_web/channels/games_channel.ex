@@ -1,4 +1,4 @@
-
+#the concepts of sockets and channels were learnt from professor Nat Tuck's lecture and example
 defmodule MemoryWeb.GamesChannel do
   use MemoryWeb, :channel
 

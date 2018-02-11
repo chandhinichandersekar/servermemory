@@ -114,9 +114,8 @@ defmodule Memory.Game do
           end
       else
         currentState
+      end
     end
-  end
-
   end
 
   def createLetterObject(letter) do

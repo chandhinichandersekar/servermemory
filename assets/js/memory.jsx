@@ -8,6 +8,7 @@ export default class Demo extends React.Component {
     constructor(props) {
       super(props);
       this.state = this.getNewGameState(this.props.initialState);
+      console.log("memory jsx", this.state);
     }
 
     getNewGameState(newState) {
@@ -55,23 +56,6 @@ export default class Demo extends React.Component {
         }
     }
 
-    compareTiles() {
-        const firstGuessTile = this.state.tiles[this.state.firstGuess];
-        const secondGuessTile = this.state.tiles[this.state.secondGuess];
-        return firstGuessTile.letter === secondGuessTile.letter;
-    }
-
-    hideTilesAfterDelay() {
-        setTimeout(() =>{
-            let { tiles, firstGuess, secondGuess } = this.state;
-            tiles[firstGuess].show = false;
-            tiles[secondGuess].show = false;
-            this.setState({tiles});
-            this.resetGuess();
-        }, 1000);
-    }
-
-
 
     createRow({ start, end }) {
         return this.state.tiles.slice(start, end).map((tile, index) => {
@@ -79,48 +63,13 @@ export default class Demo extends React.Component {
         })
     }
 
-    addClick() {
-        let { clicks } = this.state;
-        clicks = clicks + 1;
-        this.setState({clicks});
-    }
-
-    incrementMatchCount() {
-        let {matched} = this.state;
-        matched = matched + 2;
-        this.setState({matched, win: this.checkIfWin(matched)});
-    }
-
-    checkIfWin(matched) {
-        return matched === this.state.tiles.length;
-    }
-
-    guessIndexMatch(index) {
-        return this.state.firstGuess === index;
-    }
-
-    setGuessesToMatched(){
-        let { tiles } = this.state;
-        tiles[this.state.firstGuess].matched = true;
-        tiles[this.state.secondGuess].matched = true;
-        this.setState({tiles});
-    }
 
     resetGuess() {
-        if (this.props.channel) {
           this.props.channel.push("resetGame")
           .receive("ok", response => {
             const newState = this.getNewGameState(response.newState)
             this.setState(newState);
           })
-        }
-
-        // } else {
-        //   let {firstGuess, secondGuess} = this.state;
-        //   firstGuess = null;
-        //   secondGuess = null;
-        //   this.setState({ firstGuess, secondGuess });
-        // }
     }
 
     delayHide(hide) {
@@ -136,43 +85,12 @@ export default class Demo extends React.Component {
     }
 
     guess(index) {
-      if (this.props.channel) {
           this.props.channel.push("guessMemory", {index})
             .receive("ok", response => {
               const newState = this.getNewGameState(response.newState)
               this.delayHide(response.newState.hide)
               this.setState(newState);
             });
-          }
-      // } else {
-      //   let { tiles, clicks } = this.state;
-      //   if (this.state.tiles[index].matched){
-      //     return;
-      //   }
-      //   if (this.state.firstGuess === null) {
-      //       this.addClick();
-      //       this.setState({ firstGuess: index });
-      //       tiles[index].show = true;
-      //       this.setState({ tiles }, function () {
-      //       });
-      //
-      //   } else if (this.state.secondGuess === null) {
-      //       if(!this.guessIndexMatch(index)){
-      //           this.addClick();
-      //           this.setState({ secondGuess: index }, () => {
-      //               if (this.compareTiles()) {
-      //                   this.resetGuess();
-      //                   this.setGuessesToMatched();
-      //                   this.incrementMatchCount();
-      //               } else {
-      //                   this.hideTilesAfterDelay();
-      //               }
-      //           });
-      //           tiles[index].show = true;
-      //           this.setState({ tiles });
-      //       }
-      //   }
-      // }
     }
 
     render() {
